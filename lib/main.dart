@@ -5,12 +5,52 @@ import 'Screens/category_meals_screen.dart';
 import 'Screens/meal_detail_screen.dart';
 import 'Screens/filters_screen.dart';
 
+import 'Data/dummy_data.dart';
+
+import 'Models/meal.dart';
+
 void main() {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  Map<String, bool> _fliters = {
+    'gluten': false,
+    'lactose': false,
+    'vegetarian': false,
+    'vegan': false,
+  };
+
+  List<Meal> _availableMeals = DUMMY_MEALS;
+
+  void _setFilters(Map<String, bool> fliterData) {
+    setState(() {
+      _fliters = fliterData;
+
+      _availableMeals = DUMMY_MEALS.where((meal) {
+        if (_fliters['gluten']! && !meal.isGlutenFree) {
+          return false;
+        }
+        if (_fliters['lactose']! && !meal.isLactoseFree) {
+          return false;
+        }
+        if (_fliters['vegan']! && !meal.isVegan) {
+          return false;
+        }
+        if (_fliters['vegetarian']! && !meal.isVegetarian) {
+          return false;
+        }
+        return true;
+      }).toList();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,9 +77,10 @@ class MyApp extends StatelessWidget {
       // home: const CategoriesScreen(),
       routes: {
         '/': (ctx) => const TabsScreen(),
-        CategoryMealsScreen.routeName: (ctx) => const CategoryMealsScreen(),
+        CategoryMealsScreen.routeName: (ctx) =>
+            CategoryMealsScreen(_availableMeals),
         MealDetailScreen.routName: (ctx) => MealDetailScreen(),
-        FiltersScreen.routeName: (ctx) => FiltersScreen(),
+        FiltersScreen.routeName: (ctx) => FiltersScreen(_fliters, _setFilters),
       },
       onGenerateRoute: (settings) {
         print(settings.arguments);
@@ -49,7 +90,7 @@ class MyApp extends StatelessWidget {
       },
       onUnknownRoute: (settings) {
         return MaterialPageRoute(
-          builder: (ctx) => const CategoryMealsScreen(),
+          builder: (ctx) => CategoryMealsScreen(_availableMeals),
         );
       },
     );
