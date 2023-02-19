@@ -42,21 +42,21 @@ class _CategoryMealsScreenState extends State<CategoryMealsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text(categoryTitle),
-        ),
-        body: ListView.builder(
-            itemBuilder: (ctx, index) {
-              return MealItem(
-                id: displayedMeals[index].id,
-                title: displayedMeals[index].title,
-                imageUrl: displayedMeals[index].imageUrl,
-                duration: displayedMeals[index].duration,
-                complexity: displayedMeals[index].complexity,
-                affordability: displayedMeals[index].affordability,
-                removeItem: _removeMeal,
-              );
-            },
-            itemCount: displayedMeals.length));
+      appBar: AppBar(
+        title: Text(categoryTitle),
+      ),
+      body: ListView.builder(
+          itemBuilder: (ctx, index) {
+            return MealItem(
+              id: displayedMeals[index].id,
+              title: displayedMeals[index].title,
+              imageUrl: displayedMeals[index].imageUrl,
+              duration: displayedMeals[index].duration,
+              complexity: displayedMeals[index].complexity,
+              affordability: displayedMeals[index].affordability,
+            );
+          },
+          itemCount: displayedMeals.length),
+    );
   }
 }
